@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rollup/rollup-android-arm64": "^4.59.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.1",
@@ -26,5 +25,9 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "vite": "^7.3.1"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-android-arm64": "^4.59.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.59.0"
   }
 }
