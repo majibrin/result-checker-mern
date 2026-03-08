@@ -17,8 +17,8 @@ const validate = (req, res, next) => {
 
 // ── Validation rules ───────────────────────────────────
 const studentRules = [
-  body('reg_no').trim().notEmpty().withMessage('Registration number is required')
-    .isLength({ min: 5, max: 30 }).withMessage('Invalid registration number').escape(),
+  body('reg_no').notEmpty().withMessage('Registration number is required')
+    .isLength({ min: 5, max: 30 }).withMessage('Invalid registration number'),
   body('first_name').trim().notEmpty().withMessage('First name is required')
     .isLength({ max: 50 }).withMessage('First name too long').escape(),
   body('last_name').trim().notEmpty().withMessage('Last name is required')
@@ -46,17 +46,19 @@ router.get('/', async (req, res, next) => {
 router.post('/', studentRules, validate, async (req, res, next) => {
   try {
     // ── Whitelist only allowed fields ──────────────────
-    const { reg_no, first_name, last_name, department, level } = req.body
+    const { first_name, last_name, department, level } = req.body
+    // ── Read reg_no directly to avoid validator encoding ──
+    const reg_no = req.body.reg_no.toUpperCase().trim()
 
     // ── Check duplicate reg_no ─────────────────────────
-    const exists = await Student.findOne({ reg_no: reg_no.toUpperCase().trim() })
+    const exists = await Student.findOne({ reg_no })
     if (exists) return res.status(400).json({ error: 'Registration number already exists' })
 
     // ── Generate 6-digit PIN ───────────────────────────
     const rawPin = Math.floor(100000 + Math.random() * 900000).toString()
 
     const student = await Student.create({
-      reg_no:     reg_no.toUpperCase().trim(),
+      reg_no,
       first_name,
       last_name,
       department,

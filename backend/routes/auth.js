@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { body, validationResult } from 'express-validator'
 import Admin from '../models/Admin.js'
 import Student from '../models/Student.js'
-import { loginLimiter } from '../server.js'
+import { loginLimiter } from '../middleware/rateLimiter.js'
 
 const router = express.Router()
 
@@ -34,7 +34,7 @@ const studentLoginRules = [
     .trim()
     .notEmpty().withMessage('Registration number is required')
     .isLength({ min: 5, max: 30 }).withMessage('Invalid registration number')
-    .escape(),
+    .matches(/^[A-Z0-9/\-]+$/i).withMessage('Invalid characters in registration number'),
   body('pin')
     .notEmpty().withMessage('PIN is required')
     .isLength({ min: 4, max: 10 }).withMessage('PIN must be 4-10 digits')
@@ -45,9 +45,7 @@ const studentLoginRules = [
 const validate = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(422).json({
-      error: errors.array()[0].msg
-    })
+    return res.status(422).json({ error: errors.array()[0].msg })
   }
   next()
 }
@@ -56,10 +54,8 @@ const validate = (req, res, next) => {
 router.post('/admin/login', loginLimiter, adminLoginRules, validate, async (req, res, next) => {
   try {
     const { username, password } = req.body
-
     const admin = await Admin.findOne({ username }).select('+password')
 
-    // ── Timing-safe: always compare even if not found ──
     if (!admin) {
       await new Promise(r => setTimeout(r, 300))
       return res.status(401).json({ error: 'Invalid username or password' })
@@ -88,7 +84,6 @@ router.post('/student/login', loginLimiter, studentLoginRules, validate, async (
       reg_no: reg_no.toUpperCase().trim()
     }).select('+pin_hash')
 
-    // ── Timing-safe: always compare even if not found ──
     if (!student) {
       await new Promise(r => setTimeout(r, 300))
       return res.status(401).json({ error: 'Invalid Registration Number or PIN' })
