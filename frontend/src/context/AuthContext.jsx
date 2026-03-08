@@ -1,54 +1,68 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react'
+import API from '../api.js'
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser]       = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 🛡️ Security: Check localStorage on boot to restore session
-    const storedUser = localStorage.getItem('result_user');
-    const storedToken = localStorage.getItem('result_token');
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser  = localStorage.getItem('result_user')
+      const storedToken = localStorage.getItem('result_token')
+      if (storedUser && storedToken) {
+        setUser(JSON.parse(storedUser))
+      }
+    } catch {
+      // Corrupt localStorage — clear it
+      localStorage.removeItem('result_user')
+      localStorage.removeItem('result_token')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false);
-  }, []);
+  }, [])
 
   const login = async (credentials, type = 'student') => {
-    const endpoint = type === 'admin' ? '/api/auth/admin/login' : '/api/auth/student/login';
-    
-    const res = await fetch(`http://localhost:5000${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
-    });
+    try {
+      const endpoint = type === 'admin'
+        ? API.auth.adminLogin
+        : API.auth.studentLogin
 
-    const data = await res.json();
+      const res = await fetch(endpoint, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(credentials),
+      })
 
-    if (res.ok) {
-      // 🛡️ Security: Store JWT securely for subsequent API calls
-      localStorage.setItem('result_token', data.token);
-      localStorage.setItem('result_user', JSON.stringify(data.user));
-      setUser(data.user);
-      return { success: true };
-    } else {
-      return { success: false, error: data.error };
+      const data = await res.json()
+
+      if (res.ok) {
+        localStorage.setItem('result_token', data.token)
+        localStorage.setItem('result_user',  JSON.stringify(data.user))
+        setUser(data.user)
+        return { success: true }
+      }
+
+      return { success: false, error: data.error || 'Login failed' }
+    } catch {
+      return { success: false, error: 'Network error. Please try again.' }
     }
-  };
+  }
 
   const logout = () => {
-    localStorage.removeItem('result_token');
-    localStorage.removeItem('result_user');
-    setUser(null);
-  };
+    localStorage.removeItem('result_token')
+    localStorage.removeItem('result_user')
+    setUser(null)
+  }
+
+  const getToken = () => localStorage.getItem('result_token') || ''
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, getToken }}>
       {!loading && children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)
