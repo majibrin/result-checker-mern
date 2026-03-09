@@ -51,7 +51,7 @@ const StudentDashboard = () => {
   })()
 
   return (
-    <div style={{ padding: '15px', background: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui' }}>
+    <div id="student-dashboard" style={{ padding: '15px', background: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }} className="no-print">
@@ -153,8 +153,10 @@ const StudentDashboard = () => {
 
       <style>{`
         @media print {
+          nav,
           .no-print { display: none !important; }
           .print-only { display: block !important; }
+          #student-dashboard { background: white !important; padding: 0 !important; }
         }
       `}</style>
     </div>

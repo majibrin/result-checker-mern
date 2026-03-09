@@ -104,6 +104,8 @@ router.post('/student/login', loginLimiter, studentLoginRules, validate, async (
       reg_no:     student.reg_no,
       first_name: student.first_name,
       last_name:  student.last_name,
+      department: student.department,
+      level:      student.level,
       role:       'student',
     })
   } catch (err) { next(err) }
