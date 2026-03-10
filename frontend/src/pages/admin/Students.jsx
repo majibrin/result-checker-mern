@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import API, { authHeader } from '../../api.js'
+import { FaCheckCircle, FaExclamationTriangle, FaArrowLeft } from 'react-icons/fa'
 
 const Students = () => {
   const [students, setStudents]   = useState([])
@@ -83,7 +84,7 @@ const Students = () => {
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui', maxWidth: '860px', margin: '0 auto' }}>
-      <Link to="/admin/dashboard" style={backBtn}>← Dashboard</Link>
+      <Link to="/admin/dashboard" style={backBtn}><FaArrowLeft style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Dashboard</Link>
       <h2 style={{ color: '#1e293b', margin: '20px 0' }}>
         {editingId ? 'Edit Student' : 'Student Management'}
       </h2>
@@ -98,10 +99,10 @@ const Students = () => {
       {/* New student credential display */}
       {generated && (
         <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '15px', borderRadius: '12px', marginBottom: '20px' }}>
-          <h4 style={{ margin: '0 0 8px 0', color: '#16a34a' }}>✅ Student Account Created</h4>
+          <h4 style={{ margin: '0 0 8px 0', color: '#16a34a' }}><FaCheckCircle style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Student Account Created</h4>
           <p style={{ margin: '4px 0' }}>Reg No: <strong>{generated.reg}</strong></p>
           <p style={{ margin: '4px 0' }}>PIN: <strong style={{ color: '#dc2626', fontSize: '1.2rem', letterSpacing: '4px' }}>{generated.pin}</strong></p>
-          <small style={{ color: '#64748b' }}>⚠️ Save this PIN now — it cannot be retrieved again.</small>
+          <small style={{ color: '#64748b' }}><FaExclamationTriangle style={{ marginRight: '6px', verticalAlign: 'middle', color: '#d97706' }} /> Save this PIN now — it cannot be retrieved again.</small>
           <br />
           <button onClick={() => setGenerated(null)} style={{ marginTop: '8px', padding: '4px 12px', background: '#e2e8f0', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
             Dismiss
@@ -115,7 +116,7 @@ const Students = () => {
           <h4 style={{ margin: '0 0 8px 0', color: '#ea580c' }}>🔄 PIN Reset Successful</h4>
           <p style={{ margin: '4px 0' }}>Reg No: <strong>{resetPin.reg_no}</strong></p>
           <p style={{ margin: '4px 0' }}>New PIN: <strong style={{ color: '#dc2626', fontSize: '1.2rem', letterSpacing: '4px' }}>{resetPin.new_pin}</strong></p>
-          <small style={{ color: '#64748b' }}>⚠️ Give this PIN to the student immediately.</small>
+          <small style={{ color: '#64748b' }}><FaExclamationTriangle style={{ marginRight: '6px', verticalAlign: 'middle', color: '#d97706' }} /> Give this PIN to the student immediately.</small>
           <br />
           <button onClick={() => setResetPin(null)} style={{ marginTop: '8px', padding: '4px 12px', background: '#e2e8f0', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
             Dismiss

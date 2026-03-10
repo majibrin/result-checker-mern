@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import API, { authHeader } from '../../api.js'
+import { FaCheckCircle, FaBook, FaCalendarAlt, FaArrowLeft } from 'react-icons/fa'
 
 // ── Client-side course parser (mirrors backend) ────────
 const parseCourseCode = (code) => {
@@ -129,7 +130,7 @@ const Results = () => {
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui', maxWidth: '860px', margin: '0 auto' }}>
-      <Link to="/admin/dashboard" style={backBtn}>← Dashboard</Link>
+      <Link to="/admin/dashboard" style={backBtn}><FaArrowLeft style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Dashboard</Link>
       <h2 style={{ color: '#1e293b', margin: '20px 0' }}>Enter Examination Result</h2>
 
       {error && (
@@ -140,7 +141,7 @@ const Results = () => {
       )}
       {success && (
         <div style={{ background: '#f0fdf4', color: '#16a34a', padding: '12px', borderRadius: '8px', marginBottom: '12px', border: '1px solid #bbf7d0' }}>
-          ✅ {success}
+          <><FaCheckCircle style={{ marginRight: '6px', verticalAlign: 'middle' }} />{success}</>
           <button onClick={() => setSuccess('')} style={{ float: 'right', background: 'none', border: 'none', cursor: 'pointer', color: '#16a34a', fontWeight: 'bold' }}>✕</button>
         </div>
       )}
@@ -189,8 +190,8 @@ const Results = () => {
           {/* Auto-detected level + semester */}
           {detected && (
             <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '10px 14px', borderRadius: '8px', fontSize: '14px', display: 'flex', gap: '20px' }}>
-              <span>📚 Level: <strong>{detected.level}</strong></span>
-              <span>📅 Semester: <strong>{detected.semester}</strong></span>
+              <span><FaBook style={{ marginRight: '4px', verticalAlign: 'middle', color: '#2563eb' }} />Level: <strong>{detected.level}</strong></span>
+              <span><FaCalendarAlt style={{ marginRight: '4px', verticalAlign: 'middle', color: '#2563eb' }} />Semester: <strong>{detected.semester}</strong></span>
               <span style={{ color: '#64748b' }}>Auto-detected from course code</span>
             </div>
           )}

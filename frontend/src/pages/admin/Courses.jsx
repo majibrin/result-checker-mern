@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import API, { authHeader } from '../../api.js'
+import { FaCheckCircle, FaArrowLeft } from 'react-icons/fa'
 
 const Courses = () => {
   const [courses, setCourses]   = useState([])
@@ -77,7 +78,7 @@ const Courses = () => {
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui', maxWidth: '860px', margin: '0 auto' }}>
-      <Link to="/admin/dashboard" style={backBtn}>← Dashboard</Link>
+      <Link to="/admin/dashboard" style={backBtn}><FaArrowLeft style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Dashboard</Link>
       <h2 style={{ color: '#1e293b', margin: '20px 0' }}>
         {editingId ? 'Edit Course' : 'Course Catalog'}
       </h2>
@@ -93,7 +94,7 @@ const Courses = () => {
       {/* Success */}
       {success && (
         <div style={{ background: '#f0fdf4', color: '#16a34a', padding: '12px', borderRadius: '8px', marginBottom: '12px', border: '1px solid #bbf7d0' }}>
-          ✅ {success}
+          <><FaCheckCircle style={{ marginRight: '6px', verticalAlign: 'middle' }} />{success}</>
           <button onClick={() => setSuccess('')} style={{ float: 'right', background: 'none', border: 'none', cursor: 'pointer', color: '#16a34a', fontWeight: 'bold' }}>✕</button>
         </div>
       )}
