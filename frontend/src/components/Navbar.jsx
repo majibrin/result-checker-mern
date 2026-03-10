@@ -1,31 +1,44 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
-  if (!user) return null;
+  if (!user) return null
 
   return (
-    <nav style={{ background: '#1e293b', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
+    <nav className="no-print" style={{
+      background: '#1e293b', padding: '10px 20px',
+      display: 'flex', justifyContent: 'space-between',
+      alignItems: 'center', color: 'white',
+      flexWrap: 'wrap', gap: '8px',
+    }}>
       <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>ResultSystem</div>
-      <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-        {user.role === 'admin' ? (
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+        {user.role === 'admin' || user.role === 'lecturer' ? (
           <>
-            <Link to="/admin/dashboard" style={linkS}>Hub</Link>
-            <Link to="/admin/students" style={linkS}>Students</Link>
+            <NavLink to="/admin/dashboard">Hub</NavLink>
+            <NavLink to="/admin/students">Students</NavLink>
+            <NavLink to="/admin/courses">Courses</NavLink>
+            <NavLink to="/admin/results">Results</NavLink>
           </>
         ) : (
-          <Link to="/student/dashboard" style={linkS}>My Results</Link>
+          <NavLink to="/student/dashboard">My Results</NavLink>
         )}
-        <button onClick={() => { logout(); navigate('/'); }} style={logoutBtn}>Logout</button>
+        <button onClick={() => { logout(); navigate('/') }}
+          style={{ background: '#dc2626', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
+          Logout
+        </button>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-const linkS = { color: 'white', textDecoration: 'none', fontSize: '0.9rem', opacity: 0.9 };
-const logoutBtn = { background: '#dc2626', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' };
+const NavLink = ({ to, children }) => (
+  <Link to={to} style={{ color: 'white', textDecoration: 'none', fontSize: '14px', opacity: 0.85, padding: '4px 8px', borderRadius: '4px' }}>
+    {children}
+  </Link>
+)
 
-export default Navbar;
+export default Navbar

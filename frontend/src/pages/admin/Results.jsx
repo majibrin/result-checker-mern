@@ -128,7 +128,7 @@ const Results = () => {
   }
 
   return (
-    <div style={{ padding: '15px', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui' }}>
+    <div style={{ padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: 'system-ui', maxWidth: '860px', margin: '0 auto' }}>
       <Link to="/admin/dashboard" style={backBtn}>← Dashboard</Link>
       <h2 style={{ color: '#1e293b', margin: '20px 0' }}>Enter Examination Result</h2>
 
